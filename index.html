@@ -2,18 +2,21 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Maze Runner - 2026 Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Maze Runner - 2026 Promo Edition</title>
     <style>
         :root {
             --bg: #020617;
             --accent: #22d3ee;
             --accent-glow: rgba(34, 211, 238, 0.4);
             --goal: #4ade80;
-            --glass: rgba(255, 255, 255, 0.03);
+            --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
             --ads-bg: #1e293b;
+            --pad-btn: rgba(255, 255, 255, 0.07);
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0;
@@ -24,189 +27,161 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            justify-content: flex-start;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
         }
 
-        /* --- Estilos do Pop-up (Atualizados) --- */
+        /* --- Banner de Propaganda Superior --- */
+        .promo-banner {
+            background: linear-gradient(90deg, #1e293b, #334155);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            width: 90%;
+            max-width: 400px;
+            font-size: 0.85rem;
+            animation: pulse-glow 2s infinite ease-in-out;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.2); }
+            50% { box-shadow: 0 0 15px rgba(34, 211, 238, 0.5); }
+        }
+
+        .cta-button {
+            background: var(--accent);
+            color: var(--bg);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        /* --- Pop-up de Propaganda --- */
         #popup-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            
-            /* Animação de Entrada do Overlay */
+            z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            transition: all 0.4s ease;
         }
 
-        /* Classe para ativar o pop-up (chamada no JS) */
-        #popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        #popup-overlay.active { opacity: 1; visibility: visible; }
 
         .popup-content {
             background: var(--ads-bg);
             border: 2px solid var(--accent);
-            border-radius: 20px;
-            padding: 40px;
+            border-radius: 24px;
+            padding: 30px;
             text-align: center;
-            position: relative;
-            max-width: 400px;
             width: 85%;
-            box-shadow: 0 0 40px var(--accent-glow), 0 10px 30px rgba(0,0,0,0.7);
-            
-            /* Animação de Entrada do Conteúdo: Escala e Opacidade */
-            opacity: 0;
-            transform: scale(0.7) translateY(20px);
-            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 350px;
+            transform: scale(0.8);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Classe para ativar a animação do conteúdo (chamada no JS) */
-        #popup-overlay.active .popup-content {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
+        #popup-overlay.active .popup-content { transform: scale(1); }
 
-        .popup-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px var(--accent-glow);
-        }
+        .popup-title { color: var(--accent); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
         .popup-link {
             display: inline-block;
             background: var(--accent);
             color: var(--bg);
-            padding: 15px 30px;
-            border-radius: 8px;
+            padding: 12px 25px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(34, 211, 238, 0.3);
-        }
-
-        .popup-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(34, 211, 238, 0.5);
+            margin: 15px 0;
         }
 
         #close-btn {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: none;
             color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
             width: 30px;
             height: 30px;
             border-radius: 50%;
+            display: none;
+            cursor: pointer;
+        }
+
+        /* --- Jogo e Controles --- */
+        .game-container {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-            display: none; /* Escondido inicialmente */
+            justify-content: space-evenly;
+            flex-grow: 1;
+            width: 100%;
         }
 
-        #close-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        #timer-display {
-            font-size: 0.95rem;
-            opacity: 0.7;
-            margin-top: 15px;
-            color: #ccc;
-        }
-
-        /* Banner de Propaganda Original */
-        .promo-banner {
-            background: linear-gradient(90deg, #1e293b, #334155);
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            text-decoration: none;
-            color: white;
-            animation: pulse-glow 2s infinite ease-in-out;
-            transition: transform 0.3s ease;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .promo-banner:hover { transform: scale(1.02); }
-
-        .cta-button {
-            background: var(--accent);
-            color: var(--bg);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.2); }
-            50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.5); }
-            100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.2); }
-        }
-
-        .game-wrapper {
+        .canvas-wrapper {
             background: var(--glass);
-            backdrop-filter: blur(12px);
+            padding: 5px;
+            border-radius: 12px;
             border: 1px solid var(--border);
-            padding: 2rem;
-            border-radius: 24px;
-            text-align: center;
         }
 
         canvas {
             background: #0f172a;
-            border-radius: 12px;
-            max-width: 100%;
+            border-radius: 6px;
+            max-width: 80vw;
+            max-height: 80vw;
+            width: 340px;
+            height: 340px;
         }
 
-        .controls {
-            margin-top: 1.5rem;
+        .dpad {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            justify-items: center;
+            grid-template-columns: repeat(3, 70px);
+            grid-template-rows: repeat(3, 70px);
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .controls button {
-            width: 60px;
-            height: 60px;
+        .dpad-btn {
+            background: var(--pad-btn);
             border: 1px solid var(--border);
-            background: var(--glass);
-            color: white;
-            border-radius: 16px;
-            cursor: pointer;
+            border-radius: 15px;
+            color: var(--accent);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
         }
+
+        .dpad-btn:active {
+            background: var(--accent);
+            color: var(--bg);
+            transform: scale(0.9);
+        }
+
+        .btn-up { grid-column: 2; grid-row: 1; }
+        .btn-left { grid-column: 1; grid-row: 2; }
+        .btn-down { grid-column: 2; grid-row: 3; }
+        .btn-right { grid-column: 3; grid-row: 2; }
     </style>
 </head>
 <body>
@@ -214,64 +189,69 @@
 <div id="popup-overlay">
     <div class="popup-content">
         <button id="close-btn" onclick="closePopup()">×</button>
-        <h2 class="popup-title">Destaque do Dia!</h2>
-        <p>Não perca nossa oferta exclusiva preparada para você.</p>
-        <a href="https://meli.la/19ug4W5" target="_blank" class="popup-link">APROVEITAR AGORA</a>
-        <div id="timer-display">Aguarde <span id="seconds">5</span>s para fechar...</div>
+        <h2 class="popup-title">Oferta Especial</h2>
+        <p>Confira este item exclusivo antes de começar sua jornada!</p>
+        <a href="https://meli.la/19ug4W5" target="_blank" class="popup-link">VER PRODUTO</a>
+        <div id="timer-display" style="font-size: 0.8rem; opacity: 0.6;">Aguarde <span id="seconds">5</span>s para fechar...</div>
     </div>
 </div>
 
 <a href="https://meli.la/19ug4W5" target="_blank" class="promo-banner">
-    <div class="promo-text">⚡ Oferta Imperdível: Confira este produto!</div>
-    <div class="cta-button">Ver Agora</div>
+    <div>⚡ Promoção: Confira este produto!</div>
+    <div class="cta-button">Ver</div>
 </a>
 
-<div class="game-wrapper">
-    <h1>Neon Maze</h1>
-    <canvas id="maze" width="400" height="400"></canvas>
-    <div class="controls">
-        <button onmousedown="move('up')">↑</button>
-        <button onmousedown="move('left')">←</button>
-        <button onmousedown="move('down')">↓</button>
-        <button onmousedown="move('right')">→</button>
+<div class="game-container">
+    <div style="text-align: center;">
+        <h1 style="margin:0; font-size: 1.2rem; color: var(--accent);">NEON MAZE</h1>
+        <div style="font-size: 0.8rem; opacity: 0.7;">Movimentos: <span id="moves">0</span></div>
+    </div>
+
+    <div class="canvas-wrapper">
+        <canvas id="maze" width="400" height="400"></canvas>
+    </div>
+
+    <div class="dpad">
+        <button class="dpad-btn btn-up" ontouchstart="handleMove('up')" onmousedown="handleMove('up')">▲</button>
+        <button class="dpad-btn btn-left" ontouchstart="handleMove('left')" onmousedown="handleMove('left')">◀</button>
+        <button class="dpad-btn btn-right" ontouchstart="handleMove('right')" onmousedown="handleMove('right')">▶</button>
+        <button class="dpad-btn btn-down" ontouchstart="handleMove('down')" onmousedown="handleMove('down')">▼</button>
     </div>
 </div>
 
 <script>
-    // --- Lógica do Pop-up (Atualizada para animação) ---
+    // --- Lógica de Propaganda ---
     let timeLeft = 5;
     const overlay = document.getElementById('popup-overlay');
     const timerElement = document.getElementById('seconds');
     const closeBtn = document.getElementById('close-btn');
     const timerText = document.getElementById('timer-display');
 
-    // Ativa a animação de entrada assim que a página carrega
     window.addEventListener('load', () => {
         overlay.classList.add('active');
+        const countdown = setInterval(() => {
+            timeLeft--;
+            if(timerElement) timerElement.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                closeBtn.style.display = 'block';
+                timerText.innerText = "Você já pode fechar o anúncio.";
+            }
+        }, 1000);
     });
 
-    const countdown = setInterval(() => {
-        timeLeft--;
-        timerElement.innerText = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(countdown);
-            closeBtn.style.display = 'flex'; // Mostra o botão de fechar como flex para alinhar o X
-            timerText.innerText = "Você já pode fechar este anúncio.";
-        }
-    }, 1000);
+    function closePopup() { overlay.classList.remove('active'); }
 
-    function closePopup() {
-        overlay.style.display = 'none'; // Fecha o pop-up instantaneamente após o timer
-    }
-
-    // Lógica Original do Jogo Maze (Inalterada)
+    // --- Lógica do Jogo (Configurações Originais) ---
     const canvas = document.getElementById('maze');
     const ctx = canvas.getContext('2d');
-    const cols = 15; const rows = 15;
-    const cellSize = canvas.width / cols;
-    let grid = []; let current; let stack = [];
-    let player = { x: 0, y: 0 };
-    let goal = { x: cols - 1, y: rows - 1 };
+    const moveDisplay = document.getElementById('moves');
+    
+    let cols = 15, rows = 15;
+    let cellSize = canvas.width / cols;
+    let grid = [], stack = [];
+    let player = { x: 0, y: 0 }, goal = { x: cols - 1, y: rows - 1 };
+    let moveCount = 0;
 
     class Cell {
         constructor(r, c) {
@@ -280,8 +260,8 @@
             this.visited = false;
         }
         show() {
-            let x = this.c * cellSize; let y = this.r * cellSize;
-            ctx.strokeStyle = "rgba(148, 163, 184, 0.3)";
+            let x = this.c * cellSize, y = this.r * cellSize;
+            ctx.strokeStyle = "rgba(34, 211, 238, 0.3)";
             ctx.lineWidth = 2;
             if (this.walls[0]) line(x, y, x + cellSize, y);
             if (this.walls[1]) line(x + cellSize, y, x + cellSize, y + cellSize);
@@ -290,53 +270,39 @@
         }
     }
 
-    function line(x1, y1, x2, y2) {
-        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-    }
+    function line(x1, y1, x2, y2) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
 
     function setup() {
         grid = [];
         for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) { grid.push(new Cell(r, c)); }
+            for (let c = 0; c < cols; c++) grid.push(new Cell(r, c));
         }
-        current = grid[0];
-        generate();
+        generate(grid[0]);
         draw();
     }
 
-    function generate() {
-        current.visited = true;
-        let next = checkNeighbors(current);
-        if (next) {
-            next.visited = true;
-            stack.push(current);
-            removeWalls(current, next);
-            current = next;
-            generate();
-        } else if (stack.length > 0) {
-            current = stack.pop();
-            generate();
-        }
+    function generate(cell) {
+        cell.visited = true;
+        let neighbors = getNeighbors(cell);
+        if (neighbors.length > 0) {
+            let next = neighbors[Math.floor(Math.random() * neighbors.length)];
+            stack.push(cell);
+            removeWalls(cell, next);
+            generate(next);
+        } else if (stack.length > 0) generate(stack.pop());
     }
 
-    function checkNeighbors(cell) {
-        let neighbors = [];
-        let { r, c } = cell;
-        let top = grid[index(r - 1, c)];
-        let right = grid[index(r, c + 1)];
-        let bottom = grid[index(r + 1, c)];
-        let left = grid[index(r, c - 1)];
-        if (top && !top.visited) neighbors.push(top);
-        if (right && !right.visited) neighbors.push(right);
-        if (bottom && !bottom.visited) neighbors.push(bottom);
-        if (left && !left.visited) neighbors.push(left);
-        return neighbors.length > 0 ? neighbors[Math.floor(Math.random() * neighbors.length)] : undefined;
+    function getNeighbors(cell) {
+        let n = [], {r, c} = cell;
+        let top = grid[index(r-1, c)], right = grid[index(r, c+1)], bot = grid[index(r+1, c)], left = grid[index(r, c-1)];
+        if (top && !top.visited) n.push(top);
+        if (right && !right.visited) n.push(right);
+        if (bot && !bot.visited) n.push(bot);
+        if (left && !left.visited) n.push(left);
+        return n;
     }
 
-    function index(r, c) {
-        if (r < 0 || c < 0 || r > rows - 1 || c > cols - 1) return -1;
-        return c + r * cols;
-    }
+    function index(r, c) { return (r < 0 || c < 0 || r > rows-1 || c > cols-1) ? -1 : c + r * cols; }
 
     function removeWalls(a, b) {
         let x = a.c - b.c;
@@ -350,29 +316,38 @@
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         grid.forEach(cell => cell.show());
-        ctx.fillStyle = '#4ade80'; ctx.fillRect(goal.x * cellSize + 8, goal.y * cellSize + 8, cellSize - 16, cellSize - 16);
-        ctx.fillStyle = '#22d3ee'; ctx.beginPath();
-        ctx.arc(player.x * cellSize + cellSize/2, player.y * cellSize + cellSize/2, cellSize/4, 0, Math.PI * 2);
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(goal.x * cellSize + 5, goal.y * cellSize + 5, cellSize - 10, cellSize - 10);
+        ctx.fillStyle = '#22d3ee';
+        ctx.beginPath();
+        ctx.arc(player.x * cellSize + cellSize/2, player.y * cellSize + cellSize/2, cellSize/3, 0, Math.PI*2);
         ctx.fill();
     }
 
-    function move(dir) {
+    function handleMove(dir) {
+        if(event) event.preventDefault();
         let cell = grid[index(player.y, player.x)];
-        if (dir === 'up' && !cell.walls[0]) player.y--;
-        if (dir === 'right' && !cell.walls[1]) player.x++;
-        if (dir === 'down' && !cell.walls[2]) player.y--;
-        if (dir === 'left' && !cell.walls[3]) player.x--;
-        draw();
-        if (player.x === goal.x && player.y === goal.y) {
-            setTimeout(() => { alert("Nível Concluído!"); player = { x: 0, y: 0 }; setup(); }, 100);
+        let moved = false;
+        if (dir === 'up' && !cell.walls[0]) { player.y--; moved = true; }
+        if (dir === 'right' && !cell.walls[1]) { player.x++; moved = true; }
+        if (dir === 'down' && !cell.walls[2]) { player.y++; moved = true; }
+        if (dir === 'left' && !cell.walls[3]) { player.x--; moved = true; }
+        if (moved) {
+            moveCount++; moveDisplay.innerText = moveCount;
+            draw();
+            if (player.x === goal.x && player.y === goal.y) {
+                setTimeout(() => { alert("Venceu!"); resetGame(); }, 50);
+            }
         }
     }
 
+    function resetGame() { player = {x:0, y:0}; moveCount = 0; moveDisplay.innerText = 0; setup(); }
+
     window.addEventListener('keydown', e => {
-        if (e.key === 'ArrowUp') move('up');
-        if (e.key === 'ArrowRight') move('right');
-        if (e.key === 'ArrowDown') move('down');
-        if (e.key === 'ArrowLeft') move('left');
+        if (e.key === 'ArrowUp') handleMove('up');
+        if (e.key === 'ArrowRight') handleMove('right');
+        if (e.key === 'ArrowDown') handleMove('down');
+        if (e.key === 'ArrowLeft') handleMove('left');
     });
 
     setup();
